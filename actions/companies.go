@@ -70,12 +70,6 @@ func (v CompaniesResource) Show(c buffalo.Context) error {
 	return c.Render(200, r.Auto(c, company))
 }
 
-// New renders the form for creating a new Company.
-// This function is mapped to the path GET /companies/new
-func (v CompaniesResource) New(c buffalo.Context) error {
-	return c.Render(200, r.Auto(c, &models.Company{}))
-}
-
 // Create adds a Company to the DB. This function is mapped to the
 // path POST /companies
 func (v CompaniesResource) Create(c buffalo.Context) error {
@@ -112,25 +106,6 @@ func (v CompaniesResource) Create(c buffalo.Context) error {
 	c.Flash().Add("success", T.Translate(c, "company.created.success"))
 	// and redirect to the companies index page
 	return c.Render(201, r.Auto(c, company))
-}
-
-// Edit renders a edit form for a Company. This function is
-// mapped to the path GET /companies/{company_id}/edit
-func (v CompaniesResource) Edit(c buffalo.Context) error {
-	// Get the DB connection from the context
-	tx, ok := c.Value("tx").(*pop.Connection)
-	if !ok {
-		return errors.WithStack(errors.New("no transaction found"))
-	}
-
-	// Allocate an empty Company
-	company := &models.Company{}
-
-	if err := tx.Find(company, c.Param("company_id")); err != nil {
-		return c.Error(404, err)
-	}
-
-	return c.Render(200, r.Auto(c, company))
 }
 
 // Update changes a Company in the DB. This function is mapped to
