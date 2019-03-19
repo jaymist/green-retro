@@ -47,7 +47,7 @@ func (v CompaniesResource) List(c buffalo.Context) error {
 	// Add the paginator to the context so it can be used in the template.
 	c.Set("pagination", q.Paginator)
 
-	return c.Render(200, r.Auto(c, companies))
+	return c.Render(200, r.JSON(companies))
 }
 
 // Show gets the data for one Company. This function is mapped to
@@ -67,7 +67,7 @@ func (v CompaniesResource) Show(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
-	return c.Render(200, r.Auto(c, company))
+	return c.Render(200, r.JSON(company))
 }
 
 // Create adds a Company to the DB. This function is mapped to the
@@ -99,7 +99,7 @@ func (v CompaniesResource) Create(c buffalo.Context) error {
 
 		// Render again the new.html template that the user can
 		// correct the input.
-		return c.Render(422, r.Auto(c, company))
+		return c.Render(422, r.JSON(company))
 	}
 
 	// If there are no errors set a success message
@@ -146,7 +146,7 @@ func (v CompaniesResource) Update(c buffalo.Context) error {
 	// If there are no errors set a success message
 	c.Flash().Add("success", T.Translate(c, "company.updated.success"))
 	// and redirect to the companies index page
-	return c.Render(200, r.Auto(c, company))
+	return c.Render(200, r.JSON(company))
 }
 
 // Destroy deletes a Company from the DB. This function is mapped
@@ -173,5 +173,5 @@ func (v CompaniesResource) Destroy(c buffalo.Context) error {
 	// If there are no errors set a flash message
 	c.Flash().Add("success", T.Translate(c, "company.destroyed.success"))
 	// Redirect to the companies index page
-	return c.Render(200, r.Auto(c, company))
+	return c.Render(200, r.JSON(company))
 }

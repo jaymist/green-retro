@@ -77,6 +77,13 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: companies_name_idx; Type: INDEX; Schema: public; Owner: greenretro
+--
+
+CREATE UNIQUE INDEX companies_name_idx ON public.companies USING btree (name);
+
+
+--
 -- Name: schema_migration_version_idx; Type: INDEX; Schema: public; Owner: greenretro
 --
 
