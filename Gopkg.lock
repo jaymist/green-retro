@@ -116,6 +116,17 @@
   version = "v1.13.1"
 
 [[projects]]
+  digest = "1:672e790fd98c761711c1373213d649049bbb019c854dd3e78e45727289267140"
+  name = "github.com/gobuffalo/buffalo-pop"
+  packages = [
+    "pop",
+    "pop/popmw",
+  ]
+  pruneopts = "UT"
+  revision = "43e750e8a1aa4cd934b6c2d3bbcf541ea2f7a9c0"
+  version = "v1.9.0"
+
+[[projects]]
   digest = "1:5b33a8ff87888677489ba612c8aa1bf06500b087f1397a4732b7a0298f6d5f8a"
   name = "github.com/gobuffalo/envy"
   packages = ["."]
@@ -243,6 +254,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "6d1ef7ffb276350711946ddda7f11a5f490db156"
+
+[[projects]]
+  branch = "master"
+  digest = "1:7852012b47259d008b8c7a62ef5952b4319ddeac2f0382f89c257c775b95f3ea"
+  name = "github.com/gobuffalo/mw-i18n"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "337de00e4c33fad1ef7fdf24fc51f5df82db5648"
 
 [[projects]]
   branch = "master"
@@ -611,6 +630,27 @@
   version = "v3.1"
 
 [[projects]]
+  digest = "1:07140002dbf37da92090f731b46fa47be4820b82fe5c14a035203b0e813d0ec2"
+  name = "github.com/nicksnyder/go-i18n"
+  packages = [
+    "i18n",
+    "i18n/bundle",
+    "i18n/language",
+    "i18n/translation",
+  ]
+  pruneopts = "UT"
+  revision = "0dc1626d56435e9d605a29875701721c54bc9bbd"
+  version = "v1.10.0"
+
+[[projects]]
+  digest = "1:95741de3af260a92cc5c7f3f3061e85273f5a81b5db20d4bd68da74bd521675e"
+  name = "github.com/pelletier/go-toml"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c01d1270ff3e442a8a57cddc1c92dc1138598194"
+  version = "v1.2.0"
+
+[[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
   name = "github.com/pkg/errors"
   packages = ["."]
@@ -827,9 +867,12 @@
   analyzer-version = 1
   input-imports = [
     "github.com/gobuffalo/buffalo",
+    "github.com/gobuffalo/buffalo-pop/pop/popmw",
     "github.com/gobuffalo/buffalo/render",
     "github.com/gobuffalo/envy",
+    "github.com/gobuffalo/mw-csrf",
     "github.com/gobuffalo/mw-forcessl",
+    "github.com/gobuffalo/mw-i18n",
     "github.com/gobuffalo/mw-paramlogger",
     "github.com/gobuffalo/packr",
     "github.com/gobuffalo/packr/v2",
