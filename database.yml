@@ -1,0 +1,16 @@
+development: &default
+  dialect: postgres
+  database: greenretro_development
+  user: {{envOr "DATABASE_USER" "postgres"}}
+  password: {{envOr "DATABASE_PASSWORD" "postgres"}}
+  host: 127.0.0.1
+  pool: 5
+
+test:
+  <<: *default
+  database: greenretro_test
+  user: {{envOr "TEST_DATABASE_USER" "postgres"}}
+  password: {{envOr "TEST_DATABASE_PASSWORD" "postgres"}}
+
+production:
+  url: {{envOr "DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/greenretro_production?sslmode=disable"}}
