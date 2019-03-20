@@ -12,13 +12,20 @@
   </head>
   <body>
     <!-- Add top navigation bar to all pages -->
-    <header>
-      <a class="active" href="#home">Home</a>
+    <header class="topnav">
+      <a class="active" href="/">Home</a>
       <a href="#news">News</a>
       <a href="#contact">Contact</a>
       <div class="topnav-right">
-        <a href="#search">Sign up</a>
-        <a href="#about">Login</a>
+        <div class="auth-center">
+          <%= if (current_user) { %>
+            <h1><%= current_user.Email %></h1>
+            <a href="/signout" data-method="DELETE">Sign Out</a>
+          <% } else { %>
+            <a href="/signin" class="btn btn-primary">Sign In</a>
+            <a href="/users/new" class="btn btn-success">Register</a>
+          <% } %>
+        </div>
       </div>
     </header>
 
