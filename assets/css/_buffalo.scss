@@ -2,10 +2,12 @@
 	min-width: 320px;
 }
 
+$primary-green: #0d4200;
+
 header {
-	background-color: #62a5ee;
-	padding: 10px 20px;
-	box-sizing: border-box;
+  background-color: $primary-green;
+  box-sizing: border-box;
+  padding: 10px 20px;
 }
 
 .logo img {
