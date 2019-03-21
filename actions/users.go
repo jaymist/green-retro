@@ -30,7 +30,7 @@ func UsersCreate(c buffalo.Context) error {
 	if verrs.HasAny() {
 		c.Set("user", u)
 		c.Set("errors", verrs)
-		return c.Render(200, r.HTML("users/new.html"))
+		return c.Render(200, r.HTML("auth/register.html"))
 	}
 
 	c.Session().Set("current_user_id", u.ID)
