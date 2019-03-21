@@ -9,6 +9,7 @@ $link-text-color: #000000;
 // Add a black background color to the top navigation
 .topnav {
   background-color: #333;
+  font-size: 1.0625rem;
   overflow: hidden;
 
   &-left {
@@ -23,9 +24,7 @@ $link-text-color: #000000;
   a {
     color: $link-color;
     float: left;
-    font-size: 1.0625rem;
-    padding: .875rem 1rem;
-    text-align: center;
+    margin-right: .25rem;
     text-decoration: none;
   }
 
@@ -48,12 +47,20 @@ $link-text-color: #000000;
   text-align: center;
 }
 
-.auth-wrapper {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  padding: 2rem;
+.auth {
+  &-center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  &-wrapper {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    padding: 2rem;
+  }
 
   .sign-form {
     max-width: 350px;
