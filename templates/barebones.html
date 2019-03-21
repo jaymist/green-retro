@@ -11,28 +11,10 @@
     <link rel="icon" href="<%= assetPath("images/favicon.ico") %>">
   </head>
   <body>
-    <!-- Add top navigation bar to all pages -->
-    <header class="topnav">
-      <a class="active" href="/">Home</a>
-      <div class="topnav-right">
-        <div class="auth-center">
-          <%= if (current_user) { %>
-            <h1><%= current_user.Email %></h1>
-            <a href="/account" data-method="GET">My Account</a>
-            <a href="/signout" data-method="DELETE">Sign Out</a>
-          <% } else { %>
-            <a href="/signin" class="btn btn-primary">Sign In</a>
-            <a href="/register" class="btn btn-success">Register</a>
-          <% } %>
-        </div>
-      </div>
-    </header>
-
     <div class="container">
       <%= partial("flash.html") %>
       <%= yield %>
     </div>
-
     <%= javascriptTag("application.js") %>
   </body>
 </html>

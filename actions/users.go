@@ -7,10 +7,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-func UsersNew(c buffalo.Context) error {
+// Register displays registration page
+func Register(c buffalo.Context) error {
 	u := models.User{}
 	c.Set("user", u)
-	return c.Render(200, r.HTML("users/new.html"))
+	return c.Render(200, r.HTML("auth/register.html", "barebones.html"))
 }
 
 // UsersCreate registers a new user with the application.
