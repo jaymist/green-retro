@@ -11,7 +11,7 @@ import (
 func Register(c buffalo.Context) error {
 	u := models.User{}
 	c.Set("user", u)
-	return c.Render(200, r.HTML("auth/register.html", "barebones.html"))
+	return c.Render(200, r.HTML("auth/register.html"))
 }
 
 // UsersCreate registers a new user with the application.

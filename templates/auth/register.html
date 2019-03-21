@@ -1,12 +1,11 @@
 <div class="auth-wrapper">
   <div class="sign-form">
-    <img src="assets/images/logo.svg" alt="Green Retro Logo" class="center" height="42" width="42">
-    <h1>Register</h1>
+    <h1 class="center">Register</h1>
     <div>
       Create a new account and you can start running your retrospectives with your team.
     </div>
 
-    <%= form_for(user, {action: signinPath()}) { %>
+    <%= form_for(user, {action: usersPath()}) { %>
       <%= f.InputTag("Email") %>
       <%= f.InputTag("Password", {type: "password"}) %>
       <button class="btn btn-success">Sign In!</button>
