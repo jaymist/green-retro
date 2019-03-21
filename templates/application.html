@@ -13,7 +13,12 @@
   <body>
     <!-- Add top navigation bar to all pages -->
     <header class="topnav">
-      <a class="active" href="/">Home</a>
+      <div class="topnav-left">
+        <img src="assets/images/logo.svg" alt="Green Retro Logo" height="42" width="42">
+      </div>
+      <div class="topnav-left">
+        <a class="active" href="/">Home</a>
+      </div>
       <div class="topnav-right">
         <div class="auth-center">
           <%= if (current_user) { %>
