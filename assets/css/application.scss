@@ -1,8 +1,13 @@
-@import "~bootstrap/scss/bootstrap.scss";
-@import "~font-awesome/css/font-awesome.css";
+@import '~bootstrap/scss/bootstrap';
+@import '~font-awesome/css/font-awesome.css';
 
 @import 'buffalo';
 
-.sign-in-btn {
+.session-btn {
   margin-right: .625rem;
+}
+
+.account-name {
+  padding: 0 .625rem;
+  text-align: center;
 }
