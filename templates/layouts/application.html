@@ -28,25 +28,35 @@
       <!-- Button set on the right hand side to sign up/in/out -->
       <ul class="nav navbar-nav">
         <%= if (current_user) { %>
-          <li class="nav-item">
-            <h6 class="text-secondary"><%= current_user.Email %></h6>
-          </li>
-          <li class="nav-item">
-            <a href="/signout" data-method="DELETE">Sign Out</a>
+          <li class="dropdown">
+            <a class="dropdown-toggle text-white" data-toggle="dropdown" href="#">
+              <%= current_user.Email %>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li>
+                <a class="dropdown-item text-dark" href="#">Account</a>
+              </li>
+              <li>
+              <a class="dropdown-item text-dark" href="/signout" data-method="DELETE">Sign Out</a>
+              </li>
+            </ul>
           </li>
         <% } else { %>
           <li class="nav-item">
-            <a href="/signin" class="btn btn-light sign-in-btn">Sign In</a>
+            <a href="/users/new" class="btn btn-secondary session-btn">Register</a>
           </li>
           <li class="nav-item">
-            <a href="/users/new" class="btn btn-secondary">Register</a>
-          </li>
-        <% } %>
+              <a href="/signin" class="btn btn-light session-btn">Sign In</a>
+            </li>
+          <% } %>
       </ul>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid">
       <%= partial("flash.html") %>
+    </div>
+    <div class="container">
       <%= yield %>
     </div>
 
