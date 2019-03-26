@@ -1,28 +1,11 @@
-<style>
-  .auth-wrapper{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .auth-wrapper .sign-form{
-    max-width: 21.875rem;
-    width: 100%;
-    padding: 0 1.25rem;
-  }
-
-  .auth-wrapper h1 {
-    margin-bottom: 1.25rem;
-  }
-</style>
-
 <div class="auth-wrapper">
   <div class="sign-form">
     <h1>Register</h1>
 
     <%= form_for(user, {action: usersPath()}) { %>
-      <%= f.InputTag("Email") %>
+      <%= f.InputTag("First Name", {placeholder: "Gypsy"}) %>
+      <%= f.InputTag("Last Name", {placeholder: "Dog"}) %>
+      <%= f.InputTag("Email", {placeholder: "gypsy@example.com"}) %>
       <%= f.InputTag("Password", {type: "password"}) %>
       <%= f.InputTag("PasswordConfirmation", {type: "password"}) %>
 

@@ -11,3 +11,20 @@
   padding: 0 .625rem;
   text-align: center;
 }
+
+.auth-wrapper {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+
+  .sign-form {
+    max-width: 21.875rem;
+    padding: 0 1.25rem;
+    width: 100%;
+  }
+
+  h1 {
+    margin-bottom: 1.25rem;
+  }
+}
