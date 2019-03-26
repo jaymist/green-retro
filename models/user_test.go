@@ -34,6 +34,8 @@ func (ms *ModelSuite) TestUserCreateWithMissingEmail() {
 	ms.Equal(0, count)
 
 	u := &models.User{
+		FirstName:            "Mark",
+		LastName:             "Example",
 		Password:             "password",
 		PasswordConfirmation: "password",
 	}
@@ -42,6 +44,7 @@ func (ms *ModelSuite) TestUserCreateWithMissingEmail() {
 	verrs, err := u.Create(ms.DB)
 	ms.NoError(err)
 	ms.True(verrs.HasAny())
+	ms.T().Log("Validation errors: ", verrs)
 	ms.Equal(1, len(verrs.Keys()))
 	ms.Equal("email", verrs.Keys()[0])
 	ms.EqualError(verrs, "Email can not be blank.")
@@ -57,7 +60,9 @@ func (ms *ModelSuite) TestUserCreateWithMissingPassword() {
 	ms.Equal(0, count)
 
 	u := &models.User{
-		Email: "mark@example.com",
+		Email:     "mark@example.com",
+		FirstName: "Mark",
+		LastName:  "Example",
 	}
 	ms.Zero(u.PasswordHash)
 
@@ -89,7 +94,7 @@ func (ms *ModelSuite) TestUserCreateWithMissingFirstName() {
 	ms.NoError(err)
 	ms.True(verrs.HasAny())
 	ms.Equal(1, len(verrs.Keys()))
-	ms.Equal("name", verrs.Keys()[0])
+	ms.Equal("first_name", verrs.Keys()[0])
 	ms.EqualError(verrs, "Name can not be blank.")
 
 	count, err = ms.DB.Count("users")
@@ -123,6 +128,8 @@ func (ms *ModelSuite) Test_User_Create_UserExists() {
 
 	u := &models.User{
 		Email:                "mark@example.com",
+		FirstName:            "Mark",
+		LastName:             "Example",
 		Password:             "password",
 		PasswordConfirmation: "password",
 	}
