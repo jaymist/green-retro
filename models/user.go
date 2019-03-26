@@ -19,6 +19,8 @@ type User struct {
 	CreatedAt    time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
 	Email        string    `json:"email" db:"email"`
+	FirstName    string    `json:"first_name" db:"first_name"`
+	LastName     string    `json:"last_name" db:"last_name"`
 	PasswordHash string    `json:"password_hash" db:"password_hash"`
 
 	Password             string `json:"-" db:"-"`
@@ -58,6 +60,7 @@ func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	var err error
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Email, Name: "Email"},
+		&validators.StringIsPresent{Field: u.FirstName, Name: "FirstName", Message: "Name can not be blank."},
 		&validators.StringIsPresent{Field: u.PasswordHash, Name: "PasswordHash"},
 		// check to see if the email address is already taken:
 		&validators.FuncValidator{
