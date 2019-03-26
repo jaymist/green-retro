@@ -16,6 +16,8 @@ func (as *ActionSuite) Test_Users_Create() {
 
 	u := &models.User{
 		Email:                "mark@example.com",
+		FirstName:            "Mark",
+		LastName:             "Example",
 		Password:             "password",
 		PasswordConfirmation: "password",
 	}

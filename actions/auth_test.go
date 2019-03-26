@@ -13,6 +13,8 @@ func (as *ActionSuite) Test_Auth_New() {
 func (as *ActionSuite) Test_Auth_Create() {
 	u := &models.User{
 		Email:                "mark@example.com",
+		FirstName:            "Mark",
+		LastName:             "Example",
 		Password:             "password",
 		PasswordConfirmation: "password",
 	}
@@ -28,6 +30,8 @@ func (as *ActionSuite) Test_Auth_Create() {
 func (as *ActionSuite) Test_Auth_Create_Redirect() {
 	u := &models.User{
 		Email:                "mark@example.com",
+		FirstName:            "Mark",
+		LastName:             "Example",
 		Password:             "password",
 		PasswordConfirmation: "password",
 	}
@@ -55,6 +59,8 @@ func (as *ActionSuite) Test_Auth_Create_UnknownUser() {
 func (as *ActionSuite) Test_Auth_Create_BadPassword() {
 	u := &models.User{
 		Email:                "mark@example.com",
+		FirstName:            "Mark",
+		LastName:             "Example",
 		Password:             "password",
 		PasswordConfirmation: "password",
 	}
