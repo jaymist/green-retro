@@ -5,7 +5,7 @@ import (
 )
 
 func (as *ActionSuite) Test_Users_New() {
-	res := as.HTML("/users/new").Get()
+	res := as.HTML("/register").Get()
 	as.Equal(200, res.Code)
 }
 
