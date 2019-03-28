@@ -31,6 +31,20 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO greenretro;
 
 --
+-- Name: teams; Type: TABLE; Schema: public; Owner: greenretro
+--
+
+CREATE TABLE public.teams (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.teams OWNER TO greenretro;
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: greenretro
 --
 
@@ -41,11 +55,20 @@ CREATE TABLE public.users (
     last_name character varying(255) NOT NULL,
     password_hash character varying(255) NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    team_id uuid NOT NULL
 );
 
 
 ALTER TABLE public.users OWNER TO greenretro;
+
+--
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: greenretro
+--
+
+ALTER TABLE ONLY public.teams
+    ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: greenretro
@@ -60,6 +83,21 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE UNIQUE INDEX schema_migration_version_idx ON public.schema_migration USING btree (version);
+
+
+--
+-- Name: users_team_id_idx; Type: INDEX; Schema: public; Owner: greenretro
+--
+
+CREATE INDEX users_team_id_idx ON public.users USING btree (team_id);
+
+
+--
+-- Name: users users_teams_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: greenretro
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_teams_id_fk FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
