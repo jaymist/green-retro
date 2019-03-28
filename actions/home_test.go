@@ -5,7 +5,13 @@ import "github.com/jaymist/greenretro/models"
 func (as *ActionSuite) Test_HomeHandler() {
 	res := as.HTML("/").Get()
 	as.Equal(200, res.Code)
-	as.Contains(res.Body.String(), "Sign In")
+
+	body := res.Body.String()
+	as.Contains(body, "Sign In")
+	as.Contains(body, "Register")
+
+	as.Contains(body, "/register")
+	as.Contains(body, "/signin")
 }
 
 func (as *ActionSuite) Test_HomeHandler_LoggedIn() {

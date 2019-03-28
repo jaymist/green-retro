@@ -10,7 +10,7 @@ func routes(app *buffalo.App) {
 
 	app.Use(SetCurrentUser)
 	app.Use(Authorize)
-	app.GET("/users/new", UsersNew)
+	app.GET("/register", UsersNew)
 	app.POST("/users", UsersCreate)
 	app.GET("/signin", AuthNew)
 	app.POST("/signin", AuthCreate)
