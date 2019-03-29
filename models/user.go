@@ -22,6 +22,8 @@ type User struct {
 	FirstName    string    `json:"first_name" db:"first_name"`
 	LastName     string    `json:"last_name" db:"last_name"`
 	PasswordHash string    `json:"password_hash" db:"password_hash"`
+	Team         Team      `belongs_to:"team"`
+	TeamID       uuid.UUID `db:"team_id"`
 
 	Password             string `json:"-" db:"-"`
 	PasswordConfirmation string `json:"-" db:"-"`
