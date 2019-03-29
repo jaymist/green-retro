@@ -23,15 +23,22 @@ type Team struct {
 type Teams []Team
 
 // String is not required by pop and may be deleted
+// Stringify a single team
 func (t Team) String() string {
 	jt, _ := json.Marshal(t)
 	return string(jt)
 }
 
 // String is not required by pop and may be deleted
+// Stringify a slice of teams
 func (t Teams) String() string {
 	jt, _ := json.Marshal(t)
 	return string(jt)
+}
+
+// Create a team and insert into the database.
+func (t *Team) Create(tx *pop.Connection) (*validate.Errors, error) {
+	return tx.ValidateAndCreate(t)
 }
 
 // Validate gets run every time you call a "pop.Validate*" (pop.ValidateAndSave, pop.ValidateAndCreate, pop.ValidateAndUpdate) method.
