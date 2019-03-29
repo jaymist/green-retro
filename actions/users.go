@@ -3,6 +3,7 @@ package actions
 import (
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/validate"
 	"github.com/jaymist/greenretro/models"
 	"github.com/pkg/errors"
 )
@@ -16,13 +17,31 @@ func UsersNew(c buffalo.Context) error {
 
 // UsersCreate registers a new user with the application.
 func UsersCreate(c buffalo.Context) error {
+	var err error
+	var verrs *validate.Errors
+
 	u := &models.User{}
-	if err := c.Bind(u); err != nil {
+	t := &models.Team{}
+
+	if err = c.Bind(u); err != nil {
 		return errors.WithStack(err)
 	}
 
 	tx := c.Value("tx").(*pop.Connection)
-	verrs, err := u.Create(tx)
+	t.Name = u.FirstName + "'s Team"
+	verrs, err = t.Create(tx)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if verrs.HasAny() {
+		c.Set("team", u)
+		c.Set("errors", verrs)
+		return c.Render(httpCode["badRequest"], r.HTML("users/new.html"))
+	}
+
+	u.Team = *t
+	verrs, err = u.Create(tx)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -30,13 +49,13 @@ func UsersCreate(c buffalo.Context) error {
 	if verrs.HasAny() {
 		c.Set("user", u)
 		c.Set("errors", verrs)
-		return c.Render(200, r.HTML("users/new.html"))
+		return c.Render(httpCode["badRequest"], r.HTML("users/new.html"))
 	}
 
 	c.Session().Set("current_user_id", u.ID)
 	c.Flash().Add("success", "Welcome to Buffalo!")
 
-	return c.Redirect(302, "/")
+	return c.Redirect(httpCode["found"], "/")
 }
 
 // SetCurrentUser attempts to find a user based on the current_user_id
