@@ -15,19 +15,16 @@ func (as *ActionSuite) Test_HomeHandler() {
 }
 
 func (as *ActionSuite) Test_HomeHandler_LoggedIn() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
-	}
-	verrs, err := u.Create(as.DB)
-	as.NoError(err)
-	as.False(verrs.HasAny())
-	as.Session.Set("current_user_id", u.ID)
+	as.LoadFixture("user accounts")
 
-	res := as.HTML("/").Get()
+	u := &models.User{
+		Email:    "bugs@acme.com",
+		Password: "password",
+	}
+
+	res := as.HTML("/signin").Post(u)
+
+	res = as.HTML("/").Get()
 	as.Equal(200, res.Code)
 	as.Contains(res.Body.String(), "Sign Out")
 

@@ -11,16 +11,12 @@ func (as *ActionSuite) Test_Auth_New() {
 }
 
 func (as *ActionSuite) Test_Auth_Create() {
+	as.LoadFixture("user accounts")
+
 	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		Email:    "bugs@acme.com",
+		Password: "password",
 	}
-	verrs, err := u.Create(as.DB)
-	as.NoError(err)
-	as.False(verrs.HasAny())
 
 	res := as.HTML("/signin").Post(u)
 	as.Equal(302, res.Code)
@@ -28,16 +24,12 @@ func (as *ActionSuite) Test_Auth_Create() {
 }
 
 func (as *ActionSuite) Test_Auth_Create_Redirect() {
+	as.LoadFixture("user accounts")
+
 	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		Email:    "bugs@acme.com",
+		Password: "password",
 	}
-	verrs, err := u.Create(as.DB)
-	as.NoError(err)
-	as.False(verrs.HasAny())
 
 	as.Session.Set("redirectURL", "/some/url")
 
@@ -57,18 +49,13 @@ func (as *ActionSuite) Test_Auth_Create_UnknownUser() {
 }
 
 func (as *ActionSuite) Test_Auth_Create_BadPassword() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
-	}
-	verrs, err := u.Create(as.DB)
-	as.NoError(err)
-	as.False(verrs.HasAny())
+	as.LoadFixture("user accounts")
 
-	u.Password = "bad"
+	u := &models.User{
+		Email:    "bugs@acme.com",
+		Password: "bad",
+	}
+
 	res := as.HTML("/signin").Post(u)
 	as.Equal(422, res.Code)
 	as.Contains(res.Body.String(), "invalid email/password")

@@ -1,0 +1,25 @@
+[[scenario]]
+name = "user accounts"
+
+  [[scenario.table]]
+    name = "teams"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("team") %>"
+      name = "Bugs's Team"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+  [[scenario.table]]
+    name = "users"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      first_name = "bugs"
+      last_name = "bunny"
+      email = "bugs@acme.com"
+      password_hash = "<%= hash("password", {}) %>"
+      team_id = "<%= uuidNamed("team") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
