@@ -9,16 +9,26 @@ func (ms *ModelSuite) Test_User_Create() {
 	ms.NoError(err)
 	ms.Equal(0, count)
 
+	t := &models.Team{
+		Name: "Mark's Team",
+	}
+
+	verrs, err := t.Create(ms.DB)
+	ms.NoError(err)
+	ms.False(verrs.HasAny())
+	ms.NotZero(t.ID)
+
 	u := &models.User{
 		Email:                "mark@example.com",
 		FirstName:            "Mark",
 		LastName:             "Example",
 		Password:             "password",
 		PasswordConfirmation: "password",
+		Team:                 *t,
 	}
 	ms.Zero(u.PasswordHash)
 
-	verrs, err := u.Create(ms.DB)
+	verrs, err = u.Create(ms.DB)
 	ms.NoError(err)
 	ms.False(verrs.HasAny())
 	ms.NotZero(u.PasswordHash)
@@ -122,33 +132,17 @@ func (ms *ModelSuite) Test_User_Create_ValidationErrors() {
 }
 
 func (ms *ModelSuite) Test_User_Create_UserExists() {
+	ms.LoadFixture("user accounts")
+
 	count, err := ms.DB.Count("users")
-	ms.NoError(err)
-	ms.Equal(0, count)
-
-	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
-	}
-	ms.Zero(u.PasswordHash)
-
-	verrs, err := u.Create(ms.DB)
-	ms.NoError(err)
-	ms.False(verrs.HasAny())
-	ms.NotZero(u.PasswordHash)
-
-	count, err = ms.DB.Count("users")
 	ms.NoError(err)
 	ms.Equal(1, count)
 
-	u = &models.User{
-		Email:    "mark@example.com",
+	u := &models.User{
+		Email:    "bugs@acme.com",
 		Password: "password",
 	}
-	verrs, err = u.Create(ms.DB)
+	verrs, err := u.Create(ms.DB)
 	ms.NoError(err)
 	ms.True(verrs.HasAny())
 
