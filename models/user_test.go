@@ -1,6 +1,7 @@
 package models_test
 
 import (
+	"github.com/gobuffalo/validate"
 	"github.com/jaymist/greenretro/models"
 )
 
@@ -122,25 +123,18 @@ func (ms *ModelSuite) Test_User_Create_ValidationErrors() {
 }
 
 func (ms *ModelSuite) Test_User_Create_UserExists() {
-	count, err := ms.DB.Count("users")
-	ms.NoError(err)
-	ms.Equal(0, count)
+	ms.LoadFixture("user accounts")
 
 	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
+		Email:                "bugs@acme.com",
+		FirstName:            "Bugs",
+		LastName:             "Bunny",
 		Password:             "password",
 		PasswordConfirmation: "password",
 	}
 	ms.Zero(u.PasswordHash)
 
-	verrs, err := u.Create(ms.DB)
-	ms.NoError(err)
-	ms.False(verrs.HasAny())
-	ms.NotZero(u.PasswordHash)
-
-	count, err = ms.DB.Count("users")
+	count, err := ms.DB.Count("users")
 	ms.NoError(err)
 	ms.Equal(1, count)
 
@@ -148,6 +142,8 @@ func (ms *ModelSuite) Test_User_Create_UserExists() {
 		Email:    "mark@example.com",
 		Password: "password",
 	}
+
+	var verrs *validate.Errors
 	verrs, err = u.Create(ms.DB)
 	ms.NoError(err)
 	ms.True(verrs.HasAny())
