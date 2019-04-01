@@ -1,0 +1,19 @@
+create_table("teams") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("name", "string", {null: false})
+}
+
+create_table("users_teams") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("user_id", "uuid", {null: false})
+	t.Column("team_id", "uuid", {null: false})
+	t.Column("access_level", "integer", {"default": 0})
+
+	t.DisableTimestamps()
+
+	t.ForeignKey("user_id", {"users": ["id"]}, {"on_delete": "cascade"})
+	t.ForeignKey("team_id", {"teams": ["id"]}, {"on_delete": "cascade"})
+
+	t.Index("team_id")
+}
+

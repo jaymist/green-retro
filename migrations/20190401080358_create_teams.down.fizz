@@ -1,0 +1,2 @@
+drop_table("users_teams")
+drop_table("teams")
