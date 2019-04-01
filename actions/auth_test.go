@@ -11,65 +11,44 @@ func (as *ActionSuite) Test_Auth_New() {
 }
 
 func (as *ActionSuite) Test_Auth_Create() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
-	}
-	verrs, err := u.Create(as.DB)
-	as.NoError(err)
-	as.False(verrs.HasAny())
+	as.LoadFixture("user accounts")
 
-	res := as.HTML("/signin").Post(u)
+	res := as.HTML("/signin").Post(models.User{
+		Email:    "bugs@acme.com",
+		Password: "password",
+	})
 	as.Equal(302, res.Code)
 	as.Equal("/", res.Location())
 }
 
 func (as *ActionSuite) Test_Auth_Create_Redirect() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
-	}
-	verrs, err := u.Create(as.DB)
-	as.NoError(err)
-	as.False(verrs.HasAny())
-
+	as.LoadFixture("user accounts")
 	as.Session.Set("redirectURL", "/some/url")
 
-	res := as.HTML("/signin").Post(u)
+	res := as.HTML("/signin").Post(models.User{
+		Email:    "bugs@acme.com",
+		Password: "password",
+	})
 	as.Equal(302, res.Code)
 	as.Equal(res.Location(), "/some/url")
 }
 
 func (as *ActionSuite) Test_Auth_Create_UnknownUser() {
-	u := &models.User{
+	res := as.HTML("/signin").Post(models.User{
 		Email:    "mark@example.com",
 		Password: "password",
-	}
-	res := as.HTML("/signin").Post(u)
+	})
 	as.Equal(422, res.Code)
 	as.Contains(res.Body.String(), "invalid email/password")
 }
 
 func (as *ActionSuite) Test_Auth_Create_BadPassword() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
-	}
-	verrs, err := u.Create(as.DB)
-	as.NoError(err)
-	as.False(verrs.HasAny())
+	as.LoadFixture("user accounts")
 
-	u.Password = "bad"
-	res := as.HTML("/signin").Post(u)
+	res := as.HTML("/signin").Post(models.User{
+		Email:    "bugs@acme.com",
+		Password: "bad_password",
+	})
 	as.Equal(422, res.Code)
 	as.Contains(res.Body.String(), "invalid email/password")
 }
