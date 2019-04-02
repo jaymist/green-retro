@@ -73,3 +73,11 @@ func Authorize(next buffalo.Handler) buffalo.Handler {
 		return next(c)
 	}
 }
+
+// BasicAuthorize adds basic auth support to requests.
+func BasicAuthorize(next buffalo.Handler) buffalo.Handler {
+	return func(c buffalo.Context) error {
+		c.Logger().Info("Running basic auth check...\n")
+		return nil
+	}
+}

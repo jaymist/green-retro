@@ -6,15 +6,33 @@ import (
 
 // define application routes here.
 func routes(app *buffalo.App) {
-	app.GET("/", HomeHandler)
+	// FRONTEND routes and middleware
+	frontendRoutes(app)
 
-	app.Use(SetCurrentUser)
-	app.Use(Authorize)
-	app.GET("/register", UsersNew)
-	app.POST("/users", UsersCreate)
-	app.GET("/signin", AuthNew)
-	app.POST("/signin", AuthCreate)
-	app.DELETE("/signout", AuthDestroy)
-	app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate)
+	// API routes
+	apiRoutes(app)
+
 	app.ServeFiles("/", assetsBox) // serve files from the public directory
+}
+
+func frontendRoutes(app *buffalo.App) {
+	f := app.Group("/")
+
+	f.Use(SetCurrentUser)
+	f.Use(Authorize)
+
+	f.GET("/", HomeHandler)
+	f.GET("/register", UsersNew)
+	f.POST("/users", UsersCreate)
+	f.GET("/signin", AuthNew)
+	f.POST("/signin", AuthCreate)
+	f.DELETE("/signout", AuthDestroy)
+
+	f.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate)
+}
+
+func apiRoutes(app *buffalo.App) {
+	a := app.Group("/api")
+
+	a.Use(BasicAuthorize)
 }
