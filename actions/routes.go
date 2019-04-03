@@ -35,4 +35,5 @@ func apiRoutes(app *buffalo.App) {
 	a := app.Group("/api")
 
 	a.Use(BasicAuthorize)
+	a.Use(BasicAuth)
 }

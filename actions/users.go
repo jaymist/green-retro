@@ -1,10 +1,6 @@
 package actions
 
 import (
-	"encoding/base64"
-	"net/http"
-	"strings"
-
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
 	"github.com/jaymist/greenretro/models"
@@ -74,41 +70,6 @@ func Authorize(next buffalo.Handler) buffalo.Handler {
 			c.Flash().Add("danger", "You must be authorized to see that page")
 			return c.Redirect(302, "/")
 		}
-		return next(c)
-	}
-}
-
-// BasicAuthorize adds basic auth support to requests.
-func BasicAuthorize(next buffalo.Handler) buffalo.Handler {
-	return func(c buffalo.Context) error {
-		authHeader := c.Request().Header.Get("Authorization")
-		if authHeader == "" {
-			c.Response().Header().Set("WWW-Authenticate", `Basic realm="Basic Authentication"`)
-			return c.Error(http.StatusUnauthorized, errors.New("Unauthorized"))
-		}
-		c.Logger().WithField("authorization", authHeader).Info("Header")
-
-		fields := strings.Split(authHeader, " ")
-		if len(fields) < 2 {
-			c.Response().Header().Set("WWW-Authenticate", `Basic realm="Basic Authentication"`)
-			return c.Error(http.StatusUnauthorized, errors.New("Unauthorized"))
-		}
-		token := fields[1]
-		c.Logger().WithField("token", token).Info("Token")
-
-		b, err := base64.StdEncoding.DecodeString(token)
-		if err != nil {
-			c.Response().Header().Set("WWW-Authenticate", `Basic realm="Basic Authentication"`)
-			return c.Error(http.StatusUnauthorized, errors.New("Unauthorized"))
-		}
-
-		pair := strings.SplitN(string(b), ":", 2)
-		params := map[string]string{
-			"user":     pair[0],
-			"password": pair[1],
-		}
-
-		c.Logger().WithField("user details", params).Info("User details")
 		return next(c)
 	}
 }
