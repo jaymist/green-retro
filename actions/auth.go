@@ -26,9 +26,13 @@ func AuthCreate(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	if err := authenticate(c, u.Email, u.Password); err != nil {
-		return c.Error(http.StatusUnauthorized, err)
+	c.Set("user", u)
+	if err := authenticate(c, u); err != nil {
+		c.Flash().Add("danger", "Something went wrong and we were unable to log you in.")
+		c.Logger().Error(err)
+		return c.Render(http.StatusUnauthorized, r.HTML("auth/new.html"))
 	}
+	c.Logger().WithField("user", u).Info("User logged in")
 
 	c.Session().Set("current_user_id", u.ID)
 	c.Flash().Add("success", "Welcome Back to Green Retro!")
@@ -56,16 +60,14 @@ func BasicAuth(next buffalo.Handler) buffalo.Handler {
 			c.Response().Header().Set("WWW-Authenticate", `Basic realm="Basic Authentication"`)
 			return c.Error(http.StatusUnauthorized, errors.New("Unauthorized"))
 		}
-		c.Logger().WithField("authorization", authHeader).Info("Header")
 
 		fields := strings.Split(authHeader, " ")
 		if len(fields) < 2 {
 			c.Response().Header().Set("WWW-Authenticate", `Basic realm="Basic Authentication"`)
 			return c.Error(http.StatusUnauthorized, errors.New("Unauthorized"))
 		}
-		token := fields[1]
-		c.Logger().WithField("token", token).Info("Token")
 
+		token := fields[1]
 		b, err := base64.StdEncoding.DecodeString(token)
 		if err != nil {
 			c.Response().Header().Set("WWW-Authenticate", `Basic realm="Basic Authentication"`)
@@ -73,7 +75,11 @@ func BasicAuth(next buffalo.Handler) buffalo.Handler {
 		}
 
 		params := strings.SplitN(string(b), ":", 2)
-		if err := authenticate(c, params[0], params[1]); err != nil {
+		u := &models.User{
+			Email:    params[0],
+			Password: params[1],
+		}
+		if err := authenticate(c, u); err != nil {
 			return c.Error(http.StatusUnauthorized, err)
 		}
 
@@ -81,12 +87,11 @@ func BasicAuth(next buffalo.Handler) buffalo.Handler {
 	}
 }
 
-func authenticate(c buffalo.Context, email, password string) error {
+func authenticate(c buffalo.Context, u *models.User) error {
 	tx := c.Value("tx").(*pop.Connection)
-	u := &models.User{}
 
 	// find a user with the email
-	err := tx.Where("email = ?", strings.ToLower(strings.TrimSpace(email))).First(u)
+	err := tx.Where("email = ?", strings.ToLower(strings.TrimSpace(u.Email))).First(u)
 
 	if err != nil {
 		if errors.Cause(err) == sql.ErrNoRows {
