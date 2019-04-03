@@ -8,7 +8,6 @@ import (
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
-	"github.com/gobuffalo/validate"
 	"github.com/jaymist/greenretro/models"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
@@ -27,42 +26,19 @@ func AuthCreate(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	tx := c.Value("tx").(*pop.Connection)
-
-	// find a user with the email
-	err := tx.Where("email = ?", strings.ToLower(strings.TrimSpace(u.Email))).First(u)
-
-	// helper function to handle bad attempts
-	bad := func() error {
-		c.Set("user", u)
-		verrs := validate.NewErrors()
-		verrs.Add("email", "invalid email/password")
-		c.Set("errors", verrs)
-		return c.Render(422, r.HTML("auth/new.html"))
+	if err := authenticate(c, u.Email, u.Password); err != nil {
+		return c.Error(http.StatusUnauthorized, err)
 	}
 
-	if err != nil {
-		if errors.Cause(err) == sql.ErrNoRows {
-			// couldn't find an user with the supplied email address.
-			return bad()
-		}
-		return errors.WithStack(err)
-	}
-
-	// confirm that the given password matches the hashed password from the db
-	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
-	if err != nil {
-		return bad()
-	}
 	c.Session().Set("current_user_id", u.ID)
-	c.Flash().Add("success", "Welcome Back to Buffalo!")
+	c.Flash().Add("success", "Welcome Back to Green Retro!")
 
 	redirectURL := "/"
 	if redir, ok := c.Session().Get("redirectURL").(string); ok {
 		redirectURL = redir
 	}
 
-	return c.Redirect(302, redirectURL)
+	return c.Redirect(http.StatusFound, redirectURL)
 }
 
 // AuthDestroy clears the session and logs a user out
@@ -96,13 +72,35 @@ func BasicAuth(next buffalo.Handler) buffalo.Handler {
 			return c.Error(http.StatusUnauthorized, errors.New("Unauthorized"))
 		}
 
-		pair := strings.SplitN(string(b), ":", 2)
-		params := map[string]string{
-			"user":     pair[0],
-			"password": pair[1],
+		params := strings.SplitN(string(b), ":", 2)
+		if err := authenticate(c, params[0], params[1]); err != nil {
+			return c.Error(http.StatusUnauthorized, err)
 		}
 
-		c.Logger().WithField("user details", params).Info("User details")
 		return next(c)
 	}
+}
+
+func authenticate(c buffalo.Context, email, password string) error {
+	tx := c.Value("tx").(*pop.Connection)
+	u := &models.User{}
+
+	// find a user with the email
+	err := tx.Where("email = ?", strings.ToLower(strings.TrimSpace(email))).First(u)
+
+	if err != nil {
+		if errors.Cause(err) == sql.ErrNoRows {
+			// couldn't find an user with the supplied email address.
+			return errors.New("invalid credentials")
+		}
+		return errors.WithStack(err)
+	}
+
+	// confirm that the given password matches the hashed password from the db
+	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
+	if err != nil {
+		return errors.New("invalid credentials")
+	}
+
+	return nil
 }
