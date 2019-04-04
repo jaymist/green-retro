@@ -7,6 +7,7 @@ import (
 // define application routes here.
 func routes(app *buffalo.App) {
 	uiRoutes(app)
+	apiRoutes(app)
 
 	app.ServeFiles("/", assetsBox) // serve files from the public directory
 }
@@ -24,4 +25,10 @@ func uiRoutes(app *buffalo.App) {
 	ui.POST("/signin", AuthCreate)
 	ui.DELETE("/signout", AuthDestroy)
 	ui.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate)
+}
+
+func apiRoutes(app *buffalo.App) {
+	api := app.Group("/api")
+
+	api.Use(Authorize)
 }
