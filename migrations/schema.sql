@@ -31,6 +31,20 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO greenretro;
 
 --
+-- Name: teams; Type: TABLE; Schema: public; Owner: greenretro
+--
+
+CREATE TABLE public.teams (
+    id uuid NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.teams OWNER TO greenretro;
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: greenretro
 --
 
@@ -48,6 +62,30 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO greenretro;
 
 --
+-- Name: users_teams; Type: TABLE; Schema: public; Owner: greenretro
+--
+
+CREATE TABLE public.users_teams (
+    id uuid NOT NULL,
+    team_id uuid,
+    user_id uuid,
+    access_level integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.users_teams OWNER TO greenretro;
+
+--
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: greenretro
+--
+
+ALTER TABLE ONLY public.teams
+    ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: greenretro
 --
 
@@ -56,10 +94,34 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: users_teams users_teams_pkey; Type: CONSTRAINT; Schema: public; Owner: greenretro
+--
+
+ALTER TABLE ONLY public.users_teams
+    ADD CONSTRAINT users_teams_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migration_version_idx; Type: INDEX; Schema: public; Owner: greenretro
 --
 
 CREATE UNIQUE INDEX schema_migration_version_idx ON public.schema_migration USING btree (version);
+
+
+--
+-- Name: users_teams users_teams_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: greenretro
+--
+
+ALTER TABLE ONLY public.users_teams
+    ADD CONSTRAINT users_teams_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id) ON DELETE CASCADE;
+
+
+--
+-- Name: users_teams users_teams_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: greenretro
+--
+
+ALTER TABLE ONLY public.users_teams
+    ADD CONSTRAINT users_teams_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
