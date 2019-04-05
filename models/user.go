@@ -22,6 +22,7 @@ type User struct {
 	FirstName    string    `json:"first_name" db:"first_name"`
 	LastName     string    `json:"last_name" db:"last_name"`
 	PasswordHash string    `json:"password_hash" db:"password_hash"`
+	Teams        Teams     `many_to_many:"users_teams"`
 
 	Password             string `json:"-" db:"-"`
 	PasswordConfirmation string `json:"-" db:"-"`
