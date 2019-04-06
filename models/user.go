@@ -24,8 +24,7 @@ type User struct {
 	PasswordHash string    `json:"password_hash" db:"password_hash"`
 	Teams        Teams     `many_to_many:"users_teams"`
 
-	Password             string `json:"-" db:"-"`
-	PasswordConfirmation string `json:"-" db:"-"`
+	Password string `json:"-" db:"-"`
 }
 
 // Create wraps up the pattern of encrypting the password and
@@ -60,7 +59,7 @@ func (u Users) String() string {
 func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	var err error
 	return validate.Validate(
-		&validators.StringIsPresent{Field: u.Email, Name: "Email"},
+		&validators.EmailIsPresent{Field: u.Email, Name: "Email"},
 		&validators.StringIsPresent{Field: u.FirstName, Name: "FirstName", Message: "Name can not be blank."},
 		&validators.StringIsPresent{Field: u.PasswordHash, Name: "PasswordHash"},
 		// check to see if the email address is already taken:
@@ -87,11 +86,9 @@ func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 // ValidateCreate gets run every time you call "pop.ValidateAndCreate" method.
 // This method is not required and may be deleted.
 func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
-	var err error
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Password, Name: "Password"},
-		&validators.StringsMatch{Name: "Password", Field: u.Password, Field2: u.PasswordConfirmation, Message: "Password does not match confirmation"},
-	), err
+	), nil
 }
 
 // ValidateUpdate gets run every time you call "pop.ValidateAndUpdate" method.

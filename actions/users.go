@@ -24,10 +24,15 @@ func UsersCreate(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	verrs, err := u.Create(tx)
 	if err != nil {
+		c.Flash().Add("danger", "Unable to create user account. Please correct the problem and try again.")
+		c.Logger().Error(err)
 		return errors.WithStack(err)
 	}
 
 	if verrs.HasAny() {
+		c.Flash().Add("danger", "Unable to create user account. Please correct the problem and try again.")
+		c.Logger().WithField("validation-errors", verrs).Error("Failed to create user account")
+
 		c.Set("user", u)
 		c.Set("errors", verrs)
 		return c.Render(200, r.HTML("users/new.html"))
