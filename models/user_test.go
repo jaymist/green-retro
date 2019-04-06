@@ -45,7 +45,6 @@ func (ms *ModelSuite) TestUserCreateWithMissingEmail() {
 	verrs, err := u.Create(ms.DB)
 	ms.NoError(err)
 	ms.True(verrs.HasAny())
-	ms.T().Log("Validation errors: ", verrs)
 	ms.Equal(1, len(verrs.Keys()))
 	ms.Equal("email", verrs.Keys()[0])
 	ms.EqualError(verrs, "Email can not be blank.")
