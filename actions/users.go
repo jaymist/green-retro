@@ -1,9 +1,12 @@
 package actions
 
 import (
+	"net/http"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
 	"github.com/jaymist/greenretro/models"
+	"github.com/jaymist/greenretro/services"
 	"github.com/pkg/errors"
 )
 
@@ -22,7 +25,7 @@ func UsersCreate(c buffalo.Context) error {
 	}
 
 	tx := c.Value("tx").(*pop.Connection)
-	verrs, err := u.Create(tx)
+	verrs, err := services.CreateUserAndTeam(tx, u)
 	if err != nil {
 		c.Flash().Add("danger", "Unable to create user account. Please correct the problem and try again.")
 		c.Logger().Error(err)
@@ -35,7 +38,7 @@ func UsersCreate(c buffalo.Context) error {
 
 		c.Set("user", u)
 		c.Set("errors", verrs)
-		return c.Render(200, r.HTML("users/new.html"))
+		return c.Render(http.StatusBadRequest, r.HTML("users/new.html"))
 	}
 
 	c.Session().Set("current_user_id", u.ID)
