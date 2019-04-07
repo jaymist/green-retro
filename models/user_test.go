@@ -11,11 +11,10 @@ func (ms *ModelSuite) Test_User_Create() {
 	ms.Equal(0, count)
 
 	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		Email:     "mark@example.com",
+		FirstName: "Mark",
+		LastName:  "Example",
+		Password:  "password",
 	}
 	ms.Zero(u.PasswordHash)
 
@@ -35,10 +34,9 @@ func (ms *ModelSuite) TestUserCreateWithMissingEmail() {
 	ms.Equal(0, count)
 
 	u := &models.User{
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		FirstName: "Mark",
+		LastName:  "Example",
+		Password:  "password",
 	}
 	ms.Zero(u.PasswordHash)
 
@@ -47,7 +45,7 @@ func (ms *ModelSuite) TestUserCreateWithMissingEmail() {
 	ms.True(verrs.HasAny())
 	ms.Equal(1, len(verrs.Keys()))
 	ms.Equal("email", verrs.Keys()[0])
-	ms.EqualError(verrs, "Email can not be blank.")
+	ms.EqualError(verrs, "Email does not match the email format.")
 
 	count, err = ms.DB.Count("users")
 	ms.NoError(err)
@@ -84,9 +82,8 @@ func (ms *ModelSuite) TestUserCreateWithMissingFirstName() {
 	ms.Equal(0, count)
 
 	u := &models.User{
-		Email:                "mark@example.com",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		Email:    "mark@example.com",
+		Password: "password",
 	}
 	ms.Zero(u.PasswordHash)
 
@@ -125,11 +122,10 @@ func (ms *ModelSuite) Test_User_Create_UserExists() {
 	ms.LoadFixture("user accounts")
 
 	u := &models.User{
-		Email:                "bugs@acme.com",
-		FirstName:            "Bugs",
-		LastName:             "Bunny",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		Email:     "bugs@acme.com",
+		FirstName: "Bugs",
+		LastName:  "Bunny",
+		Password:  "password",
 	}
 	ms.Zero(u.PasswordHash)
 

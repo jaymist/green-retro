@@ -15,11 +15,10 @@ func (as *ActionSuite) Test_Users_Create() {
 	as.Equal(0, count)
 
 	u := &models.User{
-		Email:                "mark@example.com",
-		FirstName:            "Mark",
-		LastName:             "Example",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		Email:     "mark@example.com",
+		FirstName: "Mark",
+		LastName:  "Example",
+		Password:  "password",
 	}
 
 	res := as.HTML("/users").Post(u)
