@@ -36,11 +36,6 @@ func (t Teams) String() string {
 	return string(jt)
 }
 
-// Create a new team in the database
-func (t *Team) Create(tx *pop.Connection) (*validate.Errors, error) {
-	return tx.ValidateAndCreate(t)
-}
-
 // Validate gets run every time you call a "pop.Validate*" (pop.ValidateAndSave, pop.ValidateAndCreate, pop.ValidateAndUpdate) method.
 // This method is not required and may be deleted.
 func (t *Team) Validate(tx *pop.Connection) (*validate.Errors, error) {
