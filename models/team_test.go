@@ -13,7 +13,7 @@ func (ms *ModelSuite) Test_Team_Create() {
 		Name: "Mark's Team",
 	}
 
-	verrs, err := t.Create(ms.DB)
+	verrs, err := ms.DB.ValidateAndCreate(t)
 	ms.NoError(err)
 	ms.False(verrs.HasAny())
 
@@ -29,7 +29,7 @@ func (ms *ModelSuite) Test_Team_Create_Missing_Name() {
 
 	t := &models.Team{}
 
-	verrs, err := t.Create(ms.DB)
+	verrs, err := ms.DB.ValidateAndCreate(t)
 	ms.NoError(err)
 	ms.True(verrs.HasAny())
 	ms.Equal(1, len(verrs.Keys()))
