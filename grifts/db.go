@@ -24,11 +24,10 @@ func createModels(tx *pop.Connection) error {
 
 	// Add DB seeding stuff here
 	u := &models.User{
-		Email:                "bugs@acme.com",
-		FirstName:            "Bugs",
-		LastName:             "Bunny",
-		Password:             "password",
-		PasswordConfirmation: "password",
+		Email:     "bugs@acme.com",
+		FirstName: "Bugs",
+		LastName:  "Bunny",
+		Password:  "password",
 	}
 
 	if _, err := u.Create(tx); err != nil {
