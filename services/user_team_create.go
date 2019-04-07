@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/validate"
 	"github.com/jaymist/greenretro/models"
@@ -10,17 +8,16 @@ import (
 
 // CreateUserAndTeam creates a user and their corresponding team.
 func CreateUserAndTeam(tx *pop.Connection, u *models.User) (*validate.Errors, error) {
-	t := &models.Team{
-		Name: u.FirstName,
-	}
-
-	verrs, err := tx.ValidateAndCreate(t)
+	verrs, err := u.Create(tx)
 	if err != nil || verrs.HasAny() {
 		return verrs, err
 	}
 
-	fmt.Printf("Creating user.")
-	u.Teams = append(u.Teams, *t)
-	verrs, err = u.Create(tx)
+	t := &models.Team{
+		Name:  u.FirstName,
+		Users: models.Users{*u},
+	}
+
+	verrs, err = tx.ValidateAndCreate(t)
 	return verrs, err
 }
